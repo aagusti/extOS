@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<div metal:use-macro="view.nav">
+
+    <div metal:fill-slot="content">
+<script>
+var mID;
+var oTable;
+
+$(document).ready(function() {
+	oTable = $('#table1').dataTable({
+		"bScrollCollapse": true,
+		"iDisplayLength": 20,
+    "sPaginationType": "full_numbers",
+		"bJQueryUI": true,
+		"bPaginate": true,
+		"sDom": '<"toolbar">frtip',
+
+		"aoColumnDefs": [
+			{ "bSearchable": false, "bVisible": false, "aTargets": [ 0 ] }
+		],
+		"aoColumns": [
+			null,
+			{ "sWidth": "20%" },
+			null,
+			{ "sWidth": "6%" ,"sClass": "center"}
+		],
+    
+		"fnRowCallback": function (nRow, aData, iDisplayIndex) {
+			$(nRow).on("click", function (event) {
+				if ($(this).hasClass('row_selected')) {
+					/* mID = '';
+					$(this).removeClass('row_selected'); */
+				} else {
+					var data = oTable.fnGetData( this );
+					mID = data[0];
+					
+					oTable.$('tr.row_selected').removeClass('row_selected');
+					$(this).addClass('row_selected');
+          oTable2.fnReloadAjax("${url}admin/ugroups/grid/"+mID);
+				}
+        
+
+			})
+		},
+    
+		"bSort": false,
+		"bInfo": false,
+		"bProcessing": false,
+    "bServerSide": true,
+    "bFilter": true,
+    "bAutoWidth": false,
+		"sAjaxSource": '${url}admin/users/grid/0'
+	});
+
+	var tb_array = [
+		'<div class="btn-group pull-left">',
+		'	<button id="btn_tambah" class="btn pull-left" type="button">Tambah</button>',
+		'	<button id="btn_edit" class="btn pull-left" type="button">Edit</button>',
+		'	<button id="btn_delete" class="btn pull-left" type="button">Hapus</button>',
+		'</div>',
+	];
+  
+	var tb = tb_array.join(' ');	
+	$("div.toolbar").html(tb);
+	
+	$('#btn_tambah').click(function() {
+		window.location = '${url}admin/users/form/0';
+	});
+
+	$('#btn_edit').click(function() {
+		if(mID) {
+			window.location = '${url}admin/users/form/'+mID;
+		}else{
+			alert('Silahkan pilih data yang akan diedit');
+		}
+	});
+
+	$('#btn_delete').click(function() {
+		if(mID) {
+			var hapus = confirm('Hapus data ini?');
+			if(hapus==true) {
+				
+        $.ajax({
+          url: '${url}admin/users/delete/'+mID,
+          success: function(data) {
+              alert('Data Sudah Dihapus');
+              oTable.fnReloadAjax();
+          }
+        });
+			};
+		}else{
+			alert('Silahkan pilih data yang akan dihapus');
+		}
+	});
+  
+	oTable2 = $('#table2').dataTable({
+    //"sScrollY": 100,
+		"bScrollCollapse": true,
+		"bJQueryUI": true,
+		"bPaginate": true,
+		"sDom": '<"toolbar">frtip',
+		"iDisplayLength": 5,
+		"aoColumnDefs": [
+			{ "bSearchable": false, "bVisible": false, "aTargets": [ 0 ] }
+		],
+		"aoColumns": [
+			null,
+			{ "sWidth": "20px" },
+			null,
+			{ "sWidth": "10px" ,"sClass": "center"}
+		],
+    
+		"bSort": false,
+		"bInfo": false,
+		"bProcessing": false,
+        "bFilter": false,
+        "bAutoWidth": false,
+		"sAjaxSource": '${url}admin/ugroups/grid/0'
+	});
+
+	oTable3 = $('#table3').dataTable({
+		"bScrollCollapse": true,
+		"bJQueryUI": true,
+		"bPaginate": true,
+		"sDom": '<"toolbar">frtip',
+
+		"aoColumnDefs": [
+			{ "bSearchable": false, "bVisible": false, "aTargets": [ 0 ] }
+		],
+		"aoColumns": [
+			null,
+			{ "sWidth": "20px" },
+			null,
+			{ "sWidth": "10px" ,"sClass": "center"}
+		],
+    
+		"bSort": false,
+		"bInfo": false,
+		"bProcessing": false,
+        "bFilter": false,
+        "bAutoWidth": false,
+		"sAjaxSource": '${url}admin/ugroupapps/grid/0'
+	});
+  
+	/*$('#apps').change(function() {
+		oTable3.fnReloadAjax("${url}admin/ugroupapps/grid/"+$('#apps').val());
+	});
+		oTable3.fnReloadAjax("${url}admin/ugroupapps/grid/"+$('#apps').val());
+*/
+    
+});
+
+function remove(id) {
+	var val = Number(id);
+  if (mID){
+      $.ajax({
+        url: '${url}admin/ugroups/remove/' + id ,
+        success: function(data) 
+        {
+          if (data['success']==1){
+              alert('Hapus Berhasil');
+              oTable2.fnReloadAjax("${url}admin/ugroups/grid/"+mID);
+          }else{
+              alert('Hapus Gagal');
+          }
+          //$('#app_id').html(data);
+        }
+      });
+  }else
+  {
+        alert('Pilih dulu user yang akan diupdate');
+      return false;
+  }
+}
+
+function add(v) {
+	var val = Number(v);
+  if (mID){
+      $.ajax({
+        url: '${url}admin/ugroups/add/' + mID + '/'+val,
+        success: function(data) {
+          if (data['success']==1){
+              alert('Update Berhasil');
+              oTable2.fnReloadAjax("${url}admin/ugroups/grid/"+mID);
+          }else
+          {
+            alert('Update Gagal');
+          }
+          //$('#app_id').html(data);
+        }
+      });
+  }else
+  {
+        alert('Pilih dulu user yang akan diupdate');
+      return false;
+  }
+}
+
+
+</script>
+
+      <div class="content">
+          <div class="container-fluid">
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#"><strong>Pengguna</strong></a>
+            </li>
+          </ul>
+          <div class="row-fluid">
+            <div class="span6">
+              <table class="table" id="table1" name="table1" width="500px">
+                <thead>
+                  <tr>
+                    <th>Index</th>
+                    <th>Kode</th>
+                    <th>Nama</th>
+                    <th>Disabled</th>
+                  </tr>
+                </thead>
+             </table>
+            </div>
+            <div class="span6">
+              <div class="form-horizontal">
+                <div class="control-group">    
+                  <label class="control-label">Group Aktif</label> 
+                </div>  
+              </div>
+            
+              <div class="row-fluid">
+                <!--div class="span4"-->
+                  <table class="table" id="table2" name="table2">
+                    <thead>
+                      <tr>
+                        <th>uid</th>
+                        <th>Kode</th>
+                        <th>Nama</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                  </table>
+                <!--/div-->
+              </div>
+              
+              <div class="control-group">    
+                <label class="control-label">Group Visible</label> 
+              </div>  
+            
+              <div class="row-fluid">
+                <!--div class="span4"-->
+                  <table class="table" id="table3" name="table3">
+                    <thead>
+                      <tr>
+                        <th>Index</th>
+                        <th>Kode</th>
+                        <th>Nama</th>
+                        <th>Action</th> 
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                      <td>a</td>
+                      <td>a</td>
+                      <td>a</td>
+                      <td>a</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                <!--/div-->
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

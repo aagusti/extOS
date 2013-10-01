@@ -1,0 +1,68 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:define-macro="layout">
+<head>
+  <meta charset="utf-8">
+  <title>${datas.title}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="sistem informasi keuangan daerah">
+  <meta name="author" content="irul">
+  <script type="text/javascript" src="${request.static_url('sipkd:static/extjs/ext-all.js')}"></script>
+  <link rel="stylesheet" type="text/css" href="${request.static_url('sipkd:static/extjs/resources/css/ext-all.css')}" />
+  
+    <style>
+        /*body {
+            padding-top: 70px; /* 60px to make the container go all the way to the bottom of the topbar */
+            padding-bottom: 40px;
+        }
+        html {
+            overflow: -moz-scrollbars-vertical; /* Always show scrollbar */
+        }*/
+    </style>
+
+    <script>
+        /*var timer;
+        var wait=10;
+        document.onkeypress=resetTimer;
+        document.onmousemove=resetTimer;
+        
+        function resetTimer() {
+            clearTimeout(timer);
+            timer=setTimeout("logout()", 60000*wait);
+        };*/
+
+        function logout() {
+            window.location.href='/logout';
+        }
+        
+    </script>
+</head>
+
+<body>
+  <div class="header">
+    <a class="brand" href="http://ospbb.opensipkd.com/"><img src="${request.static_url('sipkd:static/img/logo.png')}" width="200"></a>
+     <div metal:define-slot="logged">
+     </div>
+     <div metal:define-slot="apps">
+     </div>
+  </div>
+
+  <div metal:define-slot="navbar">
+  </div>
+
+  <div metal:define-slot="content">
+  </div>
+
+  <footer>
+      <div class="container-fluid" style="position:fixed; bottom:0;">
+          <p class="muted credit"><strong><a href="http://opensipkd.com">&copy; OpenSIPKD 2013 </a></strong></p>
+      </div>
+  </footer>
+
+</body>
+</html>
+

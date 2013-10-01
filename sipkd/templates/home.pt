@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<div metal:define-macro="main">
+  <div metal:use-macro="view.layout">
+    <div metal:fill-slot="content">
+      <div id="main">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  
+ <script type="text/javascript">
+ Ext.require([
+    'Ext.form.Panel',
+    'Ext.layout.container.Anchor'
+    ]);
+
+
+Ext.onReady(function() {
+    Ext.create('Ext.form.Panel', {
+        renderTo: 'main',
+        standardSubmit: false, //  <<<< IMPORTANT if set to true you get the page (eg. PHP) you send to <<<< good idea for testing
+        title: 'Login',
+        bodyStyle: 'padding:5px 5px 0',
+        width: 300,
+        margin: '10 0 0 10',
+        fieldDefaults: {
+            labelAlign: 'left',
+            msgTarget: 'side'
+        },
+        defaults: {
+            border: false,
+            xtype: 'panel',
+            flex: 1,
+            layout: 'anchor'
+        },
+        tools: [
+        {
+            xtype: 'tool',
+            type: 'help'
+        }
+        ],
+        layout: 'anchor',
+        items: [{
+            xtype:'textfield',
+            name: 'userid',
+            id: 'userid',
+            fieldLabel: 'User Name',
+            anchor: '100%'
+        }, {
+            xtype:'textfield',
+            name: 'passwd',
+            id: 'passwd',
+            fieldLabel: 'Password',
+            inputType: 'password',
+            anchor: '100%'
+        }],
+        buttons: ['->', {
+            text: 'Login',
+            name: 'login',
+            id: 'login',
+            handler: function() {
+                var frmLogin = this.up('form').getForm();
+                if (frmLogin.isValid()) {
+                    frmLogin.submit({
+                        url: 'login', // <<<<<< let me know if you need help with the server side of the login function
+                        waitMsg: 'Submitting your credentials',
+                        success: function(form, action) { // <<<<<<<< you need to handle success and failure on the server side
+                            // opens the menu page returned by the server, php validation of security sets menu for the user
+                            //oCurrentUser = {name: action.result.username, email: action.result.usermail, sms: action.result.usersms};
+                            //alert('Is this you ?\n\n'+oCurrentUser.name+'\n'+oCurrentUser.email+'\n'+oCurrentUser.sms);
+                            location.href = action.result.redirect;
+                        },
+                        failure: function(form, action) {
+                            Ext.Msg.alert('Failure', action.result.errormsg);
+                            if (action.failureType === Ext.form.action.Action.CONNECT_FAILURE) {
+                                Ext.Msg.alert('Error',
+                                    'Status:'+action.response.status+': '+
+                                    action.response.statusText);
+                            }
+                            if (action.failureType === Ext.form.action.Action.SERVER_INVALID){
+                                // server responded with success = false
+                                Ext.Msg.alert('Invalid', action.result.errormsg);
+                            }
+                        }
+                    })
+                }
+            }
+        }, {
+            text: 'Close',
+            handler: function() {
+                close();
+            }
+        }]
+    });
+});
+
+  </script>
+  

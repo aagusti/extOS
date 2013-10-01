@@ -1,0 +1,25 @@
+admin_route = (
+    ('admin_modules',  '/admin/modules'),
+    ('admin_modules_grid', '/admin/modules/grid/{id}'),
+    ('admin_modules_form', '/admin/modules/form/{id}'),
+    ('admin_modules_cek', '/admin/modules/cek/{kode}'),
+    ('admin_modules_delete', '/admin/modules/delete/{id}'),
+    ('admin_groups', '/admin/groups'),
+    ('admin_groups_grid', '/admin/groups/grid/{id}'),
+    ('admin_groups_form', '/admin/groups/form/{id}'),
+    ('admin_groups_cek', '/admin/groups/cek/{kode}'),
+    ('admin_groups_delete', '/admin/groups/delete/{id}'),
+    ('admin_gmodule_grid', '/admin/gmodule/grid/{app_id}/{group_id}'),
+    ('admin_gmodule_update_stat', '/admin/gmodule/update_stat/{mid}/{gid}/{val}/{state}'),
+
+    ('admin_users',  '/admin/users'),
+    ('admin_users_grid', '/admin/users/grid/{id}'),
+    ('admin_users_form', '/admin/users/form/{id}'),
+    ('admin_users_cek', '/admin/users/cek/{kode}'),
+    ('admin_users_delete', '/admin/users/delete/{id}'),
+
+    ('admin_ugroups_grid', '/admin/ugroups/grid/{user_id}'),
+    ('admin_ugroups_apps_grid', '/admin/ugroupapps/grid/{app_id}'),
+    ('admin_ugroups_remove','/admin/ugroups/remove/{id}'),
+    ('admin_ugroups_add','/admin/ugroups/add/{user_id}/{group_id}'),
+    )

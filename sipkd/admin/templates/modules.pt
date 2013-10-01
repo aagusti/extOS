@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<div metal:use-macro="view.nav">
+
+    <div metal:fill-slot="content">
+<script>
+var mID;
+var oTable;
+
+$(document).ready(function() {
+	oTable = $('#table1').dataTable({
+		"bScrollCollapse": true,
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"sDom": '<"toolbar">frtip',
+
+		"aoColumnDefs": [
+			{ "bSearchable": false, "bVisible": false, "aTargets": [ 0 ] }
+		],
+		"aoColumns": [
+			null,
+			{ "sWidth": "20%" },
+			{ "sWidth": "30%" },
+			null,
+			{ "sWidth": "6%" ,"sClass": "center"}
+		],
+    
+		"fnRowCallback": function (nRow, aData, iDisplayIndex) {
+			$(nRow).on("click", function (event) {
+				if ($(this).hasClass('row_selected')) {
+					/* mID = '';
+					$(this).removeClass('row_selected'); */
+				} else {
+					var data = oTable.fnGetData( this );
+					mID = data[0];
+					
+					oTable.$('tr.row_selected').removeClass('row_selected');
+					$(this).addClass('row_selected');
+				}
+			})
+		},
+    
+		"bSort": false,
+		"bInfo": false,
+		"bProcessing": false,
+        "bFilter": true,
+        "bAutoWidth": false,
+		"sAjaxSource": '${url}admin/modules/grid/'+$('#apps').val()
+	});
+
+	var tb_array = [
+		'<div class="btn-group pull-left">',
+		'	<button id="btn_tambah" class="btn pull-left" type="button">Tambah</button>',
+		'	<button id="btn_edit" class="btn pull-left" type="button">Edit</button>',
+		'	<button id="btn_delete" class="btn pull-left" type="button">Hapus</button>',
+		'</div>',
+	];
+  
+	var tb = tb_array.join(' ');	
+	$("div.toolbar").html(tb);
+	
+	$('#apps').change(function() {
+		oTable.fnReloadAjax("${url}admin/modules/grid/"+$('#apps').val());
+	});
+
+
+	$('#btn_tambah').click(function() {
+		window.location = '${url}admin/modules/form/0';
+	});
+
+	$('#btn_edit').click(function() {
+		if(mID) {
+			window.location = '${url}admin/modules/form/'+mID;
+		}else{
+			alert('Silahkan pilih data yang akan diedit');
+		}
+	});
+
+	$('#btn_delete').click(function() {
+		if(mID) {
+			var hapus = confirm('Hapus data ini?');
+			if(hapus==true) {
+				
+        $.ajax({
+          url: '${url}admin/modules/delete/'+mID,
+          success: function(data) {
+              alert('Data Sudah Dihapus');
+              oTable.fnReloadAjax();
+          }
+        });
+			};
+		}else{
+			alert('Silahkan pilih data yang akan dihapus');
+		}
+	});
+});
+
+function update_stat(id, a) {
+	var val = Number(a);
+	$.ajax({
+	  url: '${url}admin/apps/update_stat/' + id + '/' + val,
+	  success: function(data) {
+		$('#app_id').html(data);
+	  }
+	});
+}
+
+</script>
+
+      <div class="content">
+          <div class="container-fluid">
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#"><strong>MODULES</strong></a>
+            </li>
+          </ul>
+          <span colspan="6">
+            <div class="form-horizontal">
+              <div class="control-group">    
+                <label class="control-label">Aplikasi</label> 
+                <div class="controls">
+                  <select name="apps" id="apps" >
+                    <option tal:repeat="opt datas.opts" value="${opt.id}"> 
+                        <!--span tal:replace="val" /-->
+                        ${opt.nama}
+                    </option>
+                  </select>            
+                </div>
+              </div>
+            </div>
+          </span>
+          
+          <div class="row-fluid">
+            <!--div class="span4"-->
+              <table class="table" id="table1" name="table1">
+                <thead>
+                  <tr>
+                    <th>Index</th>
+                    <th>Aplikasi</th>
+                    <th>Kode</th>
+                    <th>Nama Modul</th>
+                    <th>Disabled</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <td>a</td>
+                  <td>a</td>
+                  <td>a</td>
+                  <td>a</td>
+                  <td>a</td>
+                  </tr>
+                </tbody>
+              </table>
+            <!--/div-->
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

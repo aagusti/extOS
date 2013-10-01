@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<div metal:use-macro="view.nav">
+
+    <div metal:fill-slot="content">
+      <div class="content">
+          <div class="container-fluid">
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#"><strong>Groups</strong></a>
+            </li>
+          </ul>
+<script>          
+$(document).ready(function () {
+  function set_value(data){
+      $("#id").val(data['id']);
+      $("#kode").val(data['kode']);
+      $("#nama").val(data['nama']);
+      $("#level_id").val(data['level_id']);
+      $("#defsign").val(data['defsign']);
+      $("#header_id").val(data['header_id']);
+      $("#locked").val(data['locked']);
+      $("#form").attr('action','/admin/groups/form/'+data['id']);
+  }
+  
+  function readonly(){
+    if ($("#form_visible").val()==0){
+        $("#btn_save").attr('disabled', 'disabled');
+         $("#kode").removeAttr('readonly');
+         $("#nama").attr('readonly','readonly');
+         $("#app_id").attr('readonly','readonly');
+         $("#locked").attr('readonly','readonly');
+
+      }else{
+        $("#btn_save").removeAttr('disabled');
+        $("#kode").attr('readonly','readonly');
+        $("#nama").removeAttr('readonly');
+        $("#app_id").removeAttr('readonly');
+        $("#locked").removeAttr('readonly');
+    }
+  }
+  readonly();
+
+  $("#kode").on('keyup', function(e) {
+    if ($("#form_visible").val()==0){
+
+      var kode = $("#kode").val();
+
+      if (e.which == 13) {
+        if ($("#form_visible").val()=='0') {
+          $.ajax({
+              url: '${url}admin/groups/cek/' + kode,
+              success: function (json) {
+                  data = JSON.parse(json);
+                  var options = '';
+                  
+                  if (data['found'] == 1) {
+                      var msg = 'Kode sudah digunakan, Edit?';
+                      if (confirm(msg) == false) {
+                         return false;
+                      } else {
+                        set_value(data);
+                        $("#form_visible").val('1');
+                        readonly();
+                      };
+                  }else{
+                      var msg = 'Data tidak ada, tambah?';
+                      if (confirm(msg) == false) {
+                         return false;
+                      } else {
+                        $("#form_visible").val('1');
+                        readonly();
+                      };
+                  };
+                  //todo: apabila pemilihan rekening maka select headernya di ubah menjadi yang sejenis
+                  //      secara jquery sudah disiapkan di data['header']
+                  //      kalau found=1 maka selected objeknya langsung di set
+                  
+              },
+              error: function (xhr, desc, er) {
+                  alert(er);
+              }
+          });
+        }
+      }
+    } 
+  });
+  
+  $("#btn_reset").click(function(){
+      $("#form")[0].reset();
+      alert($("#form_visible").val());
+      readonly();
+  })
+  $("#btn_back").click(function(){
+       window.location.replace('/admin/groups')
+  })
+  
+  
+});
+</script>          
+
+<div class="content">
+
+  <div class="container-fluid">
+    <form id="form" class="form-horizontal" action='/admin/groups/form/${datas.id}' method='POST'>
+      <input id="form_visible" name="form_visible" type="text" value="${datas.form_visible}"  style="display: None">
+      <input id="id" name="id" value="${datas.id}" type="text"   style="display: None">        
+      
+      <div class="control-group">    
+        <label class="control-label">Kode</label> 
+        <div class="controls">
+          <input class="input-midle" id="kode" name="kode" value="${datas.kode}" maxlength="15" type="text" >
+        </div>
+      </div>
+
+      <div class="control-group">    
+        <label class="control-label">Uraian</label> 
+        <div class="controls">
+          <input class="input-large" id="nama" name="nama" value="${datas.nama}" maxlength="150" type="text" >
+        </div>
+      </div>
+
+      <div class="control-group">    
+        <label class="control-label">Kunci/Disable</label> 
+        <div class="controls">
+          <input id="locked" name="locked" value="${datas.locked}" type="checkbox" >
+        </div>
+      </div>
+
+      <input type="submit" class="btn btn-success" id="btn_save" name="btn_save" value="Simpan"/>
+      <input type="button" class="btn btn-warning" id="btn_reset" name="btn_reset" value="Reset"/>
+      <input type="button" class="btn btn-warning" id="btn_back" name="btn_back" value="Batal"/>
+    
+    </form>
+  </div>
+</div>         
+              
+ 
+        </div>
+      </div>
+    </div>
+</div>

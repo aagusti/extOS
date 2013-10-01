@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<div metal:define-macro="main">
+  <div metal:use-macro="view.layout">
+    <div metal:fill-slot="logged">
+        <div class="btn-group pull-right">'
+          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">${datas.usernm}</a>
+          <ul class="dropdown-menu pull-right">
+            <li><a href="#">Ubah Password</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>'
+        </div>
+    </div>
+    
+    <div metal:fill-slot="apps">
+        <form class="btn-group pull-right" >
+          <select name="app_id" id="app_id" >
+            <option tal:repeat="opt datas.opts" value="${opt.kode}"
+                    tal:attributes="value opt.kode;
+                            selected python:opt.kode==datas.module"> 
+                <!--span tal:replace="val" /-->
+                ${opt.nama}
+            </option>
+          </select>
+        </form>
+    </div>
+  </div>
+</div>
+
