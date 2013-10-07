@@ -41,7 +41,8 @@ def main(global_config, **settings):
     config.add_route('admin_apps_grid', '/admin/apps/grid')
     config.add_route('admin_apps_update_stat', '/admin/apps/update_stat/{id}/{value}')
     config.add_route('hello', '/hello')
-
+    config.add_route('get_pesan', '/get_pesan')
+    
     from admin_route import admin_route
     add_route(config, admin_route)
     

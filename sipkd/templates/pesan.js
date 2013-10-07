@@ -1,0 +1,3 @@
+function pesan(){
+  alert('a');
+}

@@ -12,6 +12,15 @@
 
   
  <script type="text/javascript">
+ var js='';
+ 
+ function LoadJs(url){
+  js = document.createElement('script');
+  js.type = "text/javascript";
+  js.src = url;
+  document.body.appendChild(js);
+ }
+
  Ext.require([
     'Ext.form.Panel',
     'Ext.layout.container.Anchor'
@@ -88,11 +97,29 @@ Ext.onReady(function() {
                     })
                 }
             }
-        }, {
-            text: 'Close',
-            handler: function() {
+        },  {
+              text: 'Close',
+              handler: function() {
                 close();
+              }
+            
+        }, {
+            text: 'Pesan',
+            handler: function() {
+                pesan();
             }
+        }, {
+            text: 'Get pesan.js',
+            handler: function() {
+             Ext.Loader.setConfig({
+                preserveScripts: false
+             });
+            Ext.Loader.loadScript({
+                  url: 'get_pesan',
+                  scope: this
+              })
+            }
+            
         }]
     });
 });

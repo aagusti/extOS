@@ -10,7 +10,7 @@ from sqlalchemy import *
 from sqlalchemy.exc import DBAPIError
 from sipkd.models import *
 from sipkd.views.views import *
-
+import os
 def get_logged(request):
     session = request.session
     if 'logged' in session:
@@ -99,3 +99,17 @@ class SipkdViews(object):
         if session['logged']==0:
             return HTTPFound(location='/')
         return dict(datas=datas or null)
+
+    @view_config(route_name="get_pesan")
+    def get_pesan(self):
+        _here = os.path.dirname(__file__)
+
+        # _icon = /app/location/myapp/static/favicon.ico
+
+        _icon = open(os.path.join(
+                     _here, '../templates', 'pesan.js')).read()
+        _fi_response = Response(content_type='text/plain',
+                                body=_icon)
+        return _fi_response
+
+        
